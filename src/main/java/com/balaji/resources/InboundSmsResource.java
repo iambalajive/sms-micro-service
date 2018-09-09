@@ -1,10 +1,10 @@
 package com.balaji.resources;
 
-import com.balaji.authentication.User;
+import com.balaji.interceptors.request.User;
 import com.balaji.resources.models.Message;
 import io.dropwizard.auth.Auth;
 
-import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,7 +20,9 @@ public class InboundSmsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response inbound(Message message) {
+    public Response inbound(@Auth User user,@Valid Message message) {
         return Response.ok(message).build();
     }
+
+
 }

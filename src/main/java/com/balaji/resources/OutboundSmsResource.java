@@ -1,8 +1,6 @@
 package com.balaji.resources;
 
-import com.balaji.authentication.User;
 import com.balaji.resources.models.Message;
-import io.dropwizard.auth.Auth;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

@@ -1,4 +1,4 @@
-package com.balaji.authentication;
+package com.balaji.interceptors.request;
 
 import java.security.Principal;
 
