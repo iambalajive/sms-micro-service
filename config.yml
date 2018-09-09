@@ -1,0 +1,13 @@
+server:
+  applicationConnectors:
+  - type: http
+    port: 9000
+  adminConnectors:
+  - type: http
+    port: 9001
+dbConfig:
+  host: localhost
+  port: 5432
+  dbName: postgres
+  userName: postgres
+  password: admin
