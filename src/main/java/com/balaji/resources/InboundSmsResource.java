@@ -42,7 +42,7 @@ public class InboundSmsResource {
     public Response inbound(@Auth User user, @Valid Message message) {
 
         List<PhoneNumber> phoneNumbers = phoneNumberDAO
-                .findByAccountIdAndNumber(user.getAccountId(), message.getFrom());
+                .findByAccountIdAndNumber(user.getAccountId(), message.getTo());
 
         if (phoneNumbers.isEmpty()) {
             SmsResponse smsResponse = new SmsResponse();

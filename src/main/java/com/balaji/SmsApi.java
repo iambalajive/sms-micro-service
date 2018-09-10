@@ -1,13 +1,14 @@
 package com.balaji;
 
+import com.balaji.cache.SmsMeterCache;
 import com.balaji.cache.StopMessageCache;
 import com.balaji.configuration.DbConfig;
-import com.balaji.dao.PhoneNumberDAO;
-import com.balaji.interceptors.request.BasicAuthenticator;
-import com.balaji.interceptors.request.User;
 import com.balaji.configuration.SmsConfiguration;
 import com.balaji.dao.AccountDAO;
+import com.balaji.dao.PhoneNumberDAO;
 import com.balaji.health.TemplateHealthCheck;
+import com.balaji.interceptors.request.BasicAuthenticator;
+import com.balaji.interceptors.request.User;
 import com.balaji.interceptors.response.ValidationErrorHandler;
 import com.balaji.resources.InboundSmsResource;
 import com.balaji.resources.OutboundSmsResource;
@@ -44,8 +45,11 @@ public class SmsApi extends Application<SmsConfiguration> {
         AccountDAO accountDAO = new AccountDAO(dbi);
         PhoneNumberDAO phoneNumberDAO = new PhoneNumberDAO(dbi);
 
+        //Cache
         StopMessageCache stopMessageCache = new StopMessageCache(4);
+        SmsMeterCache smsMeterCache = new SmsMeterCache(24);
 
+        // Basic Auth
         BasicCredentialAuthFilter<User> basicCredentialAuthFilter = new BasicCredentialAuthFilter.Builder<User>()
                 .setAuthenticator(new BasicAuthenticator(accountDAO))
                 .setRealm("SUPER SECRET STUFF")
@@ -53,8 +57,8 @@ public class SmsApi extends Application<SmsConfiguration> {
 
         environment.jersey().register(new AuthDynamicFeature(basicCredentialAuthFilter));
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
-        environment.jersey().register(new InboundSmsResource(stopMessageCache,phoneNumberDAO));
-        environment.jersey().register(new OutboundSmsResource());
+        environment.jersey().register(new InboundSmsResource(stopMessageCache, phoneNumberDAO));
+        environment.jersey().register(new OutboundSmsResource(phoneNumberDAO, stopMessageCache, smsMeterCache));
         environment.jersey().register(new ValidationErrorHandler());
         environment.healthChecks().register("AppHealthCheck", new TemplateHealthCheck());
 

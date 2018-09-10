@@ -38,6 +38,17 @@ public class StopMessageCache {
         }
     }
 
+    public boolean doesPairExist(String key, String value) {
+        try {
+            readLock.lock();
+            Set<String> values = get(key);
+            return values != null && values.contains(value);
+
+        } finally {
+            readLock.unlock();
+        }
+    }
+
 
     public Set<String> get(String key) {
         try {
