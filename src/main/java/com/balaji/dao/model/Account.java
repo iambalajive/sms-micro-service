@@ -4,10 +4,16 @@ public class Account {
 
     private String username;
     private String authId;
+    private int id;
 
-    public Account(String username, String authId) {
+    public Account(String username, String authId, int id) {
         this.username = username;
         this.authId = authId;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getUsername() {
